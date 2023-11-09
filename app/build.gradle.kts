@@ -70,4 +70,26 @@ dependencies {
     //navigation
     val navVersion = "2.7.5"
     implementation("androidx.navigation:navigation-compose:$navVersion")
+
+    // retrofit
+
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+
+// GSON
+
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+// coroutine
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
+
+    implementation("com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2")
+
+    implementation("io.coil-kt:coil-compose:2.5.0")
+
+
+
+
 }
