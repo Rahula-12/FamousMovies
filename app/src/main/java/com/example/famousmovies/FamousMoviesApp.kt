@@ -37,7 +37,10 @@ fun FamousMoviesApp(
         }
         composable(Screen.DETAILSCREEN.name) {
             DetailScreen(
-                viewModel=viewModel
+                viewModel=viewModel,
+                onBackPressed = {
+                    navController.navigateUp()
+                }
             )
         }
     }
