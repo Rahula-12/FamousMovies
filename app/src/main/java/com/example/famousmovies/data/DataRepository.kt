@@ -4,9 +4,7 @@ import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterF
 import kotlinx.coroutines.Deferred
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.Headers
 
 interface MoviesApiService {
@@ -15,20 +13,20 @@ interface MoviesApiService {
         "X-RapidAPI-Host: imdb-top-100-movies.p.rapidapi.com"
     )
     @GET("/")
-    fun getTopMovies():Deferred<List<Movie>>
+    fun getTopMovies(): Deferred<List<Movie>>
 }
-
+interface DataRepository {
+    val retrofitService:MoviesApiService
+}
 const val BASE_URL="https://imdb-top-100-movies.p.rapidapi.com"
-
-val retrofit= Retrofit
-            .Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-    .addCallAdapterFactory(CoroutineCallAdapterFactory())
-            .build()
-
-object MoviesApi{
-    val retrofitService:MoviesApiService by lazy {
+class MovieDataRepository:DataRepository{
+    private val retrofit: Retrofit = Retrofit
+        .Builder()
+        .baseUrl(BASE_URL)
+        .addConverterFactory(GsonConverterFactory.create())
+        .addCallAdapterFactory(CoroutineCallAdapterFactory())
+        .build()
+    override val retrofitService: MoviesApiService by lazy {
         retrofit.create(MoviesApiService::class.java)
     }
 }
