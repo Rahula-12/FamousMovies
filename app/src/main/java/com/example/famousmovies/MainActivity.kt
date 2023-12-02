@@ -11,9 +11,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.famousmovies.repository.MovieRepository
 import com.example.famousmovies.ui.theme.FamousMoviesTheme
+import com.example.famousmovies.viewModel.MovieViewModel
+import com.example.famousmovies.viewModel.MovieViewModelFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,14 +25,16 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var repository:MovieRepository
-
+    @Inject
+    lateinit var factory: MovieViewModelFactory
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as MovieApplication).component.inject(this)
-        lifecycleScope.launch(Dispatchers.IO) {
-            val size=repository.getMovies().size
-            Log.d("Size",size.toString())
-        }
+//        lifecycleScope.launch(Dispatchers.IO) {
+//            val size=repository.getMovies().size
+//            Log.d("Size",size.toString())
+//        }
+        val viewModel= ViewModelProvider(this,factory)[MovieViewModel::class.java]
         setContent {
             FamousMoviesTheme {
                 // A surface container using the 'background' color from the theme
