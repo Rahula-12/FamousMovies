@@ -5,9 +5,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.famousmovies.repository.MovieRepository
 import javax.inject.Inject
 
-class MovieViewModelFactory @Inject constructor(private val movieRepository: MovieRepository):ViewModelProvider.Factory {
+class MovieViewModelFactory @Inject constructor(private val movieViewModel: MovieViewModel):ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return MovieViewModel(movieRepository) as T
+        return movieViewModel as T
     }
-
 }
