@@ -1,6 +1,8 @@
 package com.example.famousmovies.screens
 
+import android.os.Build.VERSION.SDK_INT
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,10 +27,19 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.ImageLoader
 import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
+import coil.decode.GifDecoder
+import coil.decode.ImageDecoderDecoder
+import coil.request.ImageRequest
+import coil.size.Size
+import com.example.famousmovies.R
 import com.example.famousmovies.model.MovieItem
 import com.example.famousmovies.viewModel.MoviesState
 
@@ -45,18 +56,24 @@ fun MainScreen(
     },
     movieDetail:()->Unit={}
 ) {
-        val movieList=moviesState.value.moviesList
-        Column{
-            TopAppBar(title = {
-                Text(
-                    text = "Top 100 Movies",
-                    modifier=modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Center
+    if(moviesState.value.moviesList.isEmpty()) {
+        GifImage()
+    }
+    else {
+        val movieList = moviesState.value.moviesList
+        Column {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = "Top 100 Movies",
+                        modifier = modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center
+                    )
+                },
+                modifier = modifier.padding(
+                    top = 0.dp
                 )
-            },
-                modifier=modifier.padding(
-                    top=0.dp
-                ))
+            )
             LazyColumn(
                 modifier = modifier.fillMaxSize()
             ) {
@@ -76,6 +93,7 @@ fun MainScreen(
                 }
             }
         }
+    }
 }
 
 @Composable
@@ -135,4 +153,25 @@ fun MovieItem(
         }
 
     }
+}
+
+@Composable
+fun GifImage(
+    modifier: Modifier = Modifier,
+) {
+    val context = LocalContext.current
+    val imageLoader = ImageLoader.Builder(context)
+        .components {
+            add(ImageDecoderDecoder.Factory())
+        }
+        .build()
+    Image(
+        painter = rememberAsyncImagePainter(
+            ImageRequest.Builder(context).data(data = R.drawable.loader).apply(block = {
+                size(Size.ORIGINAL)
+            }).build(), imageLoader = imageLoader
+        ),
+        contentDescription = null,
+        modifier = modifier.fillMaxWidth(),
+    )
 }
