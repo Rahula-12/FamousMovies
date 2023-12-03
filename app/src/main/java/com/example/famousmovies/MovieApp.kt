@@ -38,7 +38,12 @@ fun MovieApp(
             )
         }
         composable(ScreenName.DETAILSCREEN.name){
-            DetailScreen()
+            DetailScreen(
+                movie = moviesState.value.moviesList[moviesState.value.clicked],
+                onBackPressed = {
+                    navController.popBackStack()
+                }
+            )
         }
     }
 }
