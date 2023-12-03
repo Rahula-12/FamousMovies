@@ -1,32 +1,21 @@
 package com.example.famousmovies
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import com.example.famousmovies.repository.MovieRepository
 import com.example.famousmovies.ui.theme.FamousMoviesTheme
 import com.example.famousmovies.viewModel.MovieViewModel
-import com.example.famousmovies.viewModel.MovieViewModelFactory
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class MainActivity : ComponentActivity() {
-
     @Inject
-    lateinit var repository:MovieRepository
-    @Inject
-    lateinit var factory: MovieViewModelFactory
+    lateinit var viewModel: MovieViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as MovieApplication).component.inject(this)
@@ -34,7 +23,6 @@ class MainActivity : ComponentActivity() {
 //            val size=repository.getMovies().size
 //            Log.d("Size",size.toString())
 //        }
-        val viewModel= ViewModelProvider(this,factory)[MovieViewModel::class.java]
         setContent {
             FamousMoviesTheme {
                 // A surface container using the 'background' color from the theme
@@ -42,25 +30,21 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Android")
+//                    Log.d("Size",size.toString())
+                      MovieApp(
+                          moviesState = viewModel.movies.collectAsState(),
+                          movieSelected = {
+                              viewModel.selectOrDeselectMovie(it)
+                          },
+                          movieClicked = {
+                              viewModel.movieClicked(it)
+                          },
+                          selectedCheck = {
+                              viewModel.selectedCheck(it)
+                          }
+                      )
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun GreetingPreview() {
-    FamousMoviesTheme {
-        Greeting("Android")
     }
 }
